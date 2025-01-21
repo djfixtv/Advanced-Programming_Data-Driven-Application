@@ -2,6 +2,7 @@ import requests
 from tkinter import ttk as ttk
 from tkinter import *
 from PIL import Image, ImageTk
+from ctypes import windll, byref, create_unicode_buffer, create_string_buffer
 import os
 
 allPokemon = requests.get("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0").json()
@@ -17,6 +18,9 @@ root.title("PokeBase Test")
 
 lw = 100
 lh = 100
+
+FR_PRIVATE = 0x10
+FR_NOT_ENUM = 0x20
 
 def readPokemonInfo(link):
     data = requests.get(link).json()
@@ -94,6 +98,31 @@ def RunPokeUpdate():
     pokeData = readPokemonInfo(allLinks[newSelection])
     loadPokeData(pokeData)
 
+def loadfont(fontpath, private=True, enumerable=False):
+    '''
+    Makes fonts located in file `fontpath` available to the font system.
+    '''
+    # Load font into the system
+    if isinstance(fontpath, str):
+        pathbuf = create_string_buffer(fontpath.encode('utf-8'))  # Encode as bytes
+        AddFontResourceEx = windll.gdi32.AddFontResourceExA
+    elif isinstance(fontpath, str):  # Python 3: str handles unicode as well
+        pathbuf = create_unicode_buffer(fontpath)
+        AddFontResourceEx = windll.gdi32.AddFontResourceExW
+    else:
+        raise TypeError('fontpath must be of type str')
+
+    # Determine the flags based on the private and enumerable options
+    flags = (FR_PRIVATE if private else 0) | (FR_NOT_ENUM if not enumerable else 0)
+
+    # Add the font resource and return True if successful, False otherwise
+    numFontsAdded = AddFontResourceEx(byref(pathbuf), flags, 0)
+    return bool(numFontsAdded)
+
+# Ensure the font is loaded correctly
+fontpath = r"A1 - Skills Portfolio\A1 - Resources\\Exercise 1 - Maths Quiz\determination.ttf"
+loadfont(fontpath)
+
 pil_image = Image.open("missingno.png")
 
 resized_image = pil_image.resize((lw, lh), Image.Resampling.LANCZOS)
@@ -116,27 +145,27 @@ sbar.config(command=pokelist.yview)
 imageLabel = Label(root, image=image, width=lw, height=lh)
 imageLabel.grid(row=0, column=1)
 
-flavor = Message(root, text="")
-flavor.grid(row=1, column=1)
-
 # Pokemon information frame
-dataframe = Frame(root)
+dataframe = Frame(root, bg='#40a9d8')
 dataframe.grid(row=0, column=2)
 
-name = Message(dataframe, text="", width=200, justify="center", font=("", 15))
+name = Message(dataframe, text="", width=200, justify="center", font=("", 15), bg='#40a9d8')
 name.grid(row=0, column=0, columnspan=2, sticky="n", padx=2, pady=2, )
 
-height = Message(dataframe, text="Height: ", width=200, justify="left")
+height = Message(dataframe, text="Height: ", width=200, justify="left", bg='#40a9d8')
 height.grid(row=1, column=0, sticky="w", padx=2, pady=2)
 
-weight = Message(dataframe, text="Weight: ", width=200, justify="left")
+weight = Message(dataframe, text="Weight: ", width=200, justify="left", bg='#40a9d8')
 weight.grid(row=1, column=1, sticky="w", padx=2, pady=2)
 
-abilities = Message(dataframe, text="Abilities: ", width=200, justify="left")
+abilities = Message(dataframe, text="Abilities: ", width=200, justify="left", bg='#40a9d8')
 abilities.grid(row=2, column=0, sticky="w", padx=2, pady=2)
 
-types = Message(dataframe, text="Types: ", width=200, justify="left")
+types = Message(dataframe, text="Types: ", width=200, justify="left", bg='#40a9d8')
 types.grid(row=2, column=1, sticky="w", padx=2, pady=2)
+
+flavor = Message(dataframe, text="", bg='#40a9d8')
+flavor.grid(row=3, column=0, columnspan=2)
 
 # Pokemon stats Frame
 statframe = Frame(root, bg="green")
