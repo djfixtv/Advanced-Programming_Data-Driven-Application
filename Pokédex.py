@@ -14,10 +14,11 @@ for pokemon in allPokemon["results"]:
     allLinks.append(pokemon["url"])
 
 root = Tk()
-root.title("PokeBase Test")
+root.title("Pokédex")
+root.config(bg="#ce242c", borderwidth=5, relief="ridge")
 
-lw = 100
-lh = 100
+lw = 135
+lh = 135
 
 FR_PRIVATE = 0x10
 FR_NOT_ENUM = 0x20
@@ -120,74 +121,73 @@ def loadfont(fontpath, private=True, enumerable=False):
     return bool(numFontsAdded)
 
 # Ensure the font is loaded correctly
-fontpath = r"A1 - Skills Portfolio\A1 - Resources\\Exercise 1 - Maths Quiz\determination.ttf"
+fontpath = r"pokemon_pixel_font.ttf"
 loadfont(fontpath)
 
 pil_image = Image.open("missingno.png")
-
 resized_image = pil_image.resize((lw, lh), Image.Resampling.LANCZOS)
 image = ImageTk.PhotoImage(resized_image)
 
 #Pokemon list frame
-listframe = Frame(root)
+listframe = Frame(root, bg="#ce242c", borderwidth=5, relief="ridge")
 listframe.grid(row=0, column=0)
 
-pokelist = Listbox(listframe, width=15, height=10)
+pokelist = Listbox(listframe, width=27, height=15, font=("Pokemon Pixel Font", 20, "bold"), bg="#8e1a21", fg="light gray", selectbackground="#f78c8d")
 pokelist.grid(row=0, column=0)
-pokelist.bind("<<ListboxSelect>>", PokeSelect) # Why. Why the ACTUAL fuck?
+pokelist.bind("<<ListboxSelect>>", PokeSelect)
 
-sbar = Scrollbar(listframe, width=10, orient="vertical")
+sbar = Scrollbar(listframe, width=15, orient="vertical", borderwidth=5, relief="ridge", activebackground="#610b0f", troughcolor="#610b0f")
 sbar.grid(row=0, column=1, sticky="ns")
 
 pokelist.config(yscrollcommand=sbar.set)
 sbar.config(command=pokelist.yview)
 
-imageLabel = Label(root, image=image, width=lw, height=lh)
-imageLabel.grid(row=0, column=1)
-
 # Pokemon information frame
-dataframe = Frame(root, bg='#40a9d8')
+dataframe = Frame(root, bg='#40a9d8', borderwidth=5, relief="ridge")
 dataframe.grid(row=0, column=2)
 
-name = Message(dataframe, text="", width=200, justify="center", font=("", 15), bg='#40a9d8')
+name = Message(dataframe, text="", width=200, justify="center", font=("Pokemon Pixel Font", 30, "bold"), bg='#40a9d8', fg="#1c1c1c")
 name.grid(row=0, column=0, columnspan=2, sticky="n", padx=2, pady=2, )
 
-height = Message(dataframe, text="Height: ", width=200, justify="left", bg='#40a9d8')
+height = Message(dataframe, text="Height: ", width=200, justify="left",font=("Pokemon Pixel Font", 20, "bold"), bg='#40a9d8', fg="#1c1c1c")
 height.grid(row=1, column=0, sticky="w", padx=2, pady=2)
 
-weight = Message(dataframe, text="Weight: ", width=200, justify="left", bg='#40a9d8')
+weight = Message(dataframe, text="Weight: ", width=200, justify="left",font=("Pokemon Pixel Font", 20, "bold"), bg='#40a9d8', fg="#1c1c1c")
 weight.grid(row=1, column=1, sticky="w", padx=2, pady=2)
 
-abilities = Message(dataframe, text="Abilities: ", width=200, justify="left", bg='#40a9d8')
+abilities = Message(dataframe, text="Abilities: ", width=200, justify="left",font=("Pokemon Pixel Font", 20, "bold"), bg='#40a9d8', fg="#1c1c1c")
 abilities.grid(row=2, column=0, sticky="w", padx=2, pady=2)
 
-types = Message(dataframe, text="Types: ", width=200, justify="left", bg='#40a9d8')
+types = Message(dataframe, text="Types: ", width=200, justify="left",font=("Pokemon Pixel Font", 20, "bold"), bg='#40a9d8', fg="#1c1c1c")
 types.grid(row=2, column=1, sticky="w", padx=2, pady=2)
 
-flavor = Message(dataframe, text="", bg='#40a9d8')
+flavor = Message(dataframe, text="",font=("Pokemon Pixel Font", 20, "bold"), bg='#40a9d8', fg="#1c1c1c")
 flavor.grid(row=3, column=0, columnspan=2)
 
 # Pokemon stats Frame
-statframe = Frame(root, bg="green")
+statframe = Frame(root, bg="#4caf50", borderwidth=5, relief="ridge")
 statframe.grid(row=0, column=3)
 
-basehp = Message(statframe, bg="green", text="HP:", width=100, padx=20, anchor="w")
-basehp.grid(row=0, column=0, columnspan=3)
+imageLabel = Label(statframe, image=image, width=lw, height=lh, bg="#4caf50", borderwidth=2, relief="ridge")
+imageLabel.grid(row=1, column=0)
 
-baseatk = Message(statframe, bg="green", text="ATK:", width=100, padx=20, anchor="w")
-baseatk.grid(row=1, column=0, columnspan=3)
+basehp = Message(statframe, bg="#4caf50", text="HP:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+basehp.grid(row=2, column=0, columnspan=3, sticky="w")
 
-basedef = Message(statframe, bg="green", text="DEF:", width=100, padx=20, anchor="w")
-basedef.grid(row=2, column=0, columnspan=3)
+baseatk = Message(statframe, bg="#4caf50", text="ATK:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+baseatk.grid(row=3, column=0, columnspan=3, sticky="w")
 
-spatk = Message(statframe, bg="green", text="Sp.Atk:", width=100, padx=20, anchor="w")
-spatk.grid(row=3, column=0, columnspan=3)
+basedef = Message(statframe, bg="#4caf50", text="DEF:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+basedef.grid(row=4, column=0, columnspan=3, sticky="w")
 
-spdef = Message(statframe, bg="green", text="Sp.Def:", width=100, padx=20, anchor="w")
-spdef.grid(row=4, column=0, columnspan=3)
+spatk = Message(statframe, bg="#4caf50", text="Sp.Atk:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+spatk.grid(row=5, column=0, columnspan=3, sticky="w")
 
-speed = Message(statframe, bg="green", text="Speed:", width=100, padx=20, anchor="w")
-speed.grid(row=5, column=0, columnspan=3)
+spdef = Message(statframe, bg="#4caf50", text="Sp.Def:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+spdef.grid(row=6, column=0, columnspan=3, sticky="w")
+
+speed = Message(statframe, bg="#4caf50", text="Speed:", justify="left", font=("Pokemon Pixel Font", 20, "bold"), width=100, padx=20, fg="#1c1c1c")
+speed.grid(row=7, column=0, columnspan=3, sticky="w")
 
 def loadPokeData(pokeData):
     print(pokeData)
@@ -246,6 +246,6 @@ def loadImage(path):
     imageLabel.image = loaded_final
 
 for line in range(len(allNames)):
-    pokelist.insert(line, allNames[line])
+    pokelist.insert(line, "  " + allNames[line])
 loadPokeData(readPokemonInfo(allLinks[0])) 
 root.mainloop()
